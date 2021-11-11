@@ -1,7 +1,7 @@
 import axios from 'axios'
 import React, { useEffect } from 'react'
 import { useState } from 'react'
-import { Navigate, useParams } from 'react-router'
+import { useParams } from 'react-router'
 import { useNavigate } from 'react-router-dom';
 
 
@@ -35,24 +35,24 @@ export default function Preview() {
         loading()
         getPost()
         console.log(slug)
-    }, [])
+    })
 
     // state
-    const [sizeScreen , setSizeScreen] = useState('w-3/4')
+    // const [sizeScreen , setSizeScreen] = useState('w-3/4')
     const [styleFrame, setStyleFrame] = useState('w-4/5 bg-red-200 mx-auto h-4/5 border-4 border-gray-800 overflow-hidden')
 
     // function set frame screen 
     const FrameScreen = (param) => {
-        if (param == 'desktop'){
+        if (param === 'desktop'){
             setStyleFrame('w-4/5 bg-red-200 mx-auto h-3/4 border-4 border-gray-800 overflow-hidden')
-        } else if (param == 'tablet'){
+        } else if (param === 'tablet'){
             setStyleFrame('w-2/5 bg-red-200 mx-auto h-3/4 border-4 border-gray-800 overflow-hidden')
         } else {
             setStyleFrame('w-96 bg-red-200 mx-auto h-3/4 border-4 border-gray-800 overflow-hidden')
         }
     }
 
-    if(isLoading == true){
+    if(isLoading === true){
         return (
             <div className="bg-customBg flex items-center justify-center w-full h-screen fixed">
                 <div className="w-5 h-5 bg-sky-600 rounded-full animate-bounce mx-2"></div>
@@ -97,7 +97,7 @@ export default function Preview() {
                             </button>
                         </div>
                         <div className='flex items-center justify-end px-2'>
-                            <a href={data.data_url} target='_blank' className='bg-gray-50 mx-1 h-3/4 w-1/4 rounded flex items-center justify-center font-semibold text-center'>
+                            <a href={data.data_url} target='_blank' className='bg-gray-50 mx-1 h-3/4 w-1/4 rounded flex items-center justify-center font-semibold text-center' rel="noreferrer">
                                 Demo
                             </a>
                             <button onClick={() => Navigate('/')} className='bg-sky-600 mx-1 h-3/4 w-1/4 rounded font-semibold text-center text-white'>
@@ -118,7 +118,7 @@ export default function Preview() {
                                 <div className='bg-gray-50 w-3 h-3 mx-1 rounded-full'></div>
                             </div>
                         </div>
-                        <iframe className='w-full h-full' src={data.data_url} frameBorder="1"></iframe>
+                        <iframe title={data.id} className='w-full h-full' src={data.data_url} frameBorder="1"></iframe>
                     </div>
                     {/* asd */}
                 </div>

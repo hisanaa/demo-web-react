@@ -12,7 +12,6 @@ function Index() {
 
     // state
     const [terms, setTerms] = useState([])
-    const [termss, setTermss] = useState([])
     const [posts, setPosts] = useState([])
     const [isLoading, setIsLoading] = useState(true)
 
@@ -57,7 +56,7 @@ function Index() {
         navigate(`/preview/${slug}`)
     }
 
-    if(isLoading == true){
+    if(isLoading === true){
         return (
             <div className="bg-customBg flex items-center justify-center w-full h-screen fixed">
                 <div className="w-5 h-5 bg-sky-600 rounded-full animate-bounce mx-2"></div>
