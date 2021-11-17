@@ -19,7 +19,7 @@ export default function Preview() {
         axios.get(`https://immense-forest-05789.herokuapp.com/api/post/${slug}`)
         .then(res => {
             setData(res.data.data[0])
-            console.log(res.data.data)
+            // console.log(res.data.data)
         })
     }
 
@@ -34,8 +34,8 @@ export default function Preview() {
         // get data by id 
         loading()
         getPost()
-        console.log(slug)
-    })
+        // console.log(slug)
+    },[])
 
     // state
     // const [sizeScreen , setSizeScreen] = useState('w-3/4')

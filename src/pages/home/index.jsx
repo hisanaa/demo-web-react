@@ -5,6 +5,15 @@ import { useNavigate } from 'react-router-dom';
 function Index() {
     useEffect(() => {
         loading()
+        // setTimeout(() => setIsLoading(true), 1000)
+        // alert(window.localStorage.getItem("category"))
+
+        // check session storage 
+        const category = localStorage.getItem("category")
+        if(category){
+            setIsActive(category)
+            GetPost(category)
+        }
         // console.log(123)
         GetTerm()
 
@@ -13,8 +22,9 @@ function Index() {
     // state
     const [terms, setTerms] = useState([])
     const [posts, setPosts] = useState([])
-    const [isLoading, setIsLoading] = useState(true)
-
+    const [isLoading, setIsLoading] = useState(false)
+    const [isActive, setIsActive] = useState(false)
+ 
 
     // get data api term
     const GetTerm = () => {
@@ -22,7 +32,7 @@ function Index() {
         axios.get('https://immense-forest-05789.herokuapp.com/api/term')
         // axios.get('https://jsonplaceholder.typicode.com/posts')
         .then((res) => {
-            console.log(res.data)
+            // console.log(res.data)
             setTerms(res.data.data)
         })
         .catch((err) => {
@@ -31,17 +41,29 @@ function Index() {
     }
 
     const loading = () => {
+        // setTimeout(() => {
+        //     setIsLoading(true)
+        // }, 2000)
+        setIsLoading(true)
         setTimeout(() => {
             setIsLoading(false)
-        }, 2000)
+        }, 1000)
     }
 
     // get data post by category
     const GetPost =  (slug) => {
-         axios.get(`https://immense-forest-05789.herokuapp.com/api/term/${slug}`)
+         axios.get(`https://immense-forest-05789.herokuapp.com/api/post/${slug}`)
         .then(res => {
             // console.log(res.data.data.posts)
-            setPosts(res.data.data.posts)
+            setPosts(res.data.data)
+            // console.log(res.data.data)
+            // alert(slug)
+            setIsActive(slug)
+            localStorage.setItem('category', slug)
+            // setTimeout(() => setIsLoading(true), 100)
+            // loading()
+
+
 
         })
         .catch(err => {
@@ -67,7 +89,7 @@ function Index() {
     } else {
 
     return (        
-      <div className="w-full h-screen bg-customBg">
+      <div className="w-full pb-5 bg-customBg">
         
         <div className='container mx-auto w-100 '>
             {/* title and description */}
@@ -76,25 +98,39 @@ function Index() {
             {/* button category */}
             <div className='grid grid-cols-1 md:grid-cols-4 gap-4 py-5 w-3/4 md:w-full lg:3/4 mx-auto'>
                 {terms.map(term => {
-                    return <button key={term.id} onClick={() => GetPost(term.slug)} className='bg-white rounded h-12 text-black font-bold hover:bg-gray-100'>{term.title}</button> 
+                    return <button key={term.id} onClick={() => GetPost(term.slug)} className={`rounded h-12  font-bold  ${isActive === term.slug ? 'bg-sky-600 text-white' : 'bg-white text-black hover:bg-gray-100'} `}>{term.title}</button> 
                 })}
             </div>
             {/* box content */}
-            <div className="grid grid-cols-1 md:grid-cols-3 px-5 py-2 md:px-0 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-4 px-5 py-2 md:px-0 gap-4">
                 {posts.map(post => { 
-                    return <div key={post.id} className='bg-white grid grid-row-1 overflow-hidden rounded-lg h-auto'>
+                    return <div key={post.id} className='bg-white grid grid-row-1 overflow-hidden rounded-lg'>
                         {/* box image */}
-                        <div className="w-auto border-b overflow-hidden rounded-t-lg bg-red-200">
-                            <img className='object-contain ' src={post.thumbnail_url} alt="" />
+                        <div className="w-auto border-gray-400 rounded-t-lg">
+                            <div className="bg-red-500 w-full relative">
+                                <div className="absolute w-full h-full bg-gray-800 opacity-10 hover:opacity-75 transition duration-300 ease-in-out">
+                               <div className="opacity-0 hover:opacity-100  duration-500 absolute inset-0 z-10 flex justify-center items-center text-sm text-white font-medium">
+                                   <button onClick={() => Preview(post.slug)} className='border-2 rounded border-white p-2' href="">Show Demo</button>
+                               </div>
+
+                                </div>
+                                <img className='object-contain' src={post.thumbnail_url} alt="" />
+                            </div>
                         </div>
                         {/* title */}
-                        <div className='py-3'>
-                            <h5 className='text-center capitalize font-medium text-xl'>{post.title}</h5>
+                        <div className='py-2 flex justify-center'>
+                            <button onClick={() => Preview(post.slug)} onLoadCapture={() => alert(123)} className='hover:text-gray-900 text-gray-700 capitalize font-semibold text-lg'>{post.title}</button>
+                        </div>
+                        {/* tag */}
+                        <div className='pb-4 flex items-center justify-center flex-wrap'>
+                            {post.tags.map(tag => {
+                                return <button className='bg-sky-600 hover:bg-sky-700 text-white py-1 px-2 text-sm font-medium rounded mx-1'>#{tag.title.replace(/\s/g,'')}</button>
+                            })}
                         </div>
                         {/* button action */}
-                        <div className='mx-auto pb-3'>
-                            <button onClick={() => Preview(post.slug)} className='bg-sky-600 w-60 rounded h-12 font-semibold hover:bg-sky-700 text-white'>Show Demo</button>
-                        </div>
+                        {/* <div className='mx-auto pb-3'>
+                            <button onClick={() => Preview(post.slug)} className='bg-sky-600 w-40 rounded h-10 font-semibold hover:bg-sky-700 text-white'>Show Demo</button>
+                        </div> */}
                     </div>
                 })}
             </div>
@@ -106,3 +142,4 @@ function Index() {
 }
 
 export default Index
+
